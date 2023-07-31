@@ -1,14 +1,24 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
+
+const fetchPhotos = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/photos");
+  const data = await response.json();
+  return data;
+};
 
 export default function AboutPage() {
+  const [images, setImages] = useState();
+  useEffect(() => {
+    fetchPhotos().then((data) => {
+      setImages(data);
+    });
+  }, []);
   return (
     <>
       <Head>
         <meta property="og:title" content="Denny's awesome Site" />
-        <meta
-          property="og:image"
-          content="https://hips.hearstapps.com/hmg-prod/images/golden-retriever-royalty-free-image-506756303-1560962726.jpg?crop=1.00xw:0.756xh;0,0.0756xh&resize=1200:*"
-        />
+        <meta property="og:image" content={images && images[0]?.url} />
         <meta
           property="og:description"
           content="Something in here that gives a decent description length when we are testing it out."
